@@ -2,13 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalAnalytics = document.getElementById('modal-analytics');
     const data = window.appData;
 
-    // Открытие модалки
     document.getElementById('btn-show-analytics').addEventListener('click', () => {
         modalAnalytics.style.display = 'block';
-        updateGroupSelect(); // обновить список групп
+        updateGroupSelect();
     });
 
-    // Закрытие
     document.querySelector('#modal-analytics .close').addEventListener('click', () => {
         modalAnalytics.style.display = 'none';
     });
@@ -18,45 +16,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Кнопка "Показать аналитику"
     document.getElementById('btn-run-analytics').addEventListener('click', () => {
         const group = document.getElementById('groupSelect').value;
         const stats = calculateAnalytics(group);
         displayAnalytics(stats);
     });
 
-    // Расчёт
     function calculateAnalytics(group = '') {
-        const targetStudents = group 
-            ? data.students.filter(s => s.group === group) 
+        const targetStudents = group
+            ? data.students.filter(s => s.group === group)
             : data.students;
         const studentIds = targetStudents.map(s => s.id);
         const filtered = data.records.filter(r => studentIds.includes(r.studentId));
 
         const grades = filtered
-            .map(r => r.grade)
-            .filter(g => g !== null);
-        const avg = grades.length 
+            .flatMap(r => r.grades || [])
+            .filter(g => typeof g === 'number' && g >= 1 && g <= 5);
+        const avg = grades.length
             ? (grades.reduce((a, b) => a + b, 0) / grades.length).toFixed(2)
             : 'Нет данных';
 
-        const total = filtered.length;
-        const absences = filtered.filter(r => r.status).length;
-        const att = total 
-            ? ((total - absences) / total * 100).toFixed(1) + '%' 
+        const attendedLessons = filtered.filter(r =>
+            (r.statuses || []).includes('Присутствовал')
+        ).length;
+        const totalLessons = filtered.length;
+        const att = totalLessons
+            ? ((attendedLessons / totalLessons) * 100).toFixed(1) + '%'
             : 'Нет данных';
+
+        const uniqueSubjects = new Set(filtered.map(r => r.subjectId)).size;
 
         return {
             averageGrade: avg,
             attendanceRate: att,
             studentCount: targetStudents.length,
-            subjectCount: data.subjects.length,
-            totalRecords: total,
+            subjectCount: uniqueSubjects,
+            totalRecords: totalLessons,
             totalGrades: grades.length
         };
     }
 
-    // Отображение
     function displayAnalytics(stats) {
         document.getElementById('analyticsContainer').classList.remove('hidden');
         document.getElementById('averageGrade').textContent = stats.averageGrade;
