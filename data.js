@@ -1,15 +1,12 @@
-// Глобальные данные (единое хранилище)
 window.appData = {
     students: [],
     subjects: [],
-    records: [], // { id, studentId, subjectId, date, grade?, status }
+    records: [], // { id, studentId, subjectId, date, grades: [], statuses: [] }
 
-    // Счётчики ID
     currentStudentId: 1,
     currentSubjectId: 1,
     currentRecordId: 1,
 
-    // Загрузка из localStorage
     load() {
         const s = localStorage.getItem('students');
         const sb = localStorage.getItem('subjects');
@@ -27,7 +24,6 @@ window.appData = {
         this.currentRecordId = rid ? parseInt(rid) : 1;
     },
 
-    // Сохранение в localStorage
     save() {
         localStorage.setItem('students', JSON.stringify(this.students));
         localStorage.setItem('subjects', JSON.stringify(this.subjects));
@@ -37,7 +33,6 @@ window.appData = {
         localStorage.setItem('currentRecordId', this.currentRecordId.toString());
     },
 
-    // Вспомогательные методы
     getStudentById(id) {
         return this.students.find(s => s.id === id);
     },
@@ -59,23 +54,25 @@ window.appData = {
         });
         this.save();
     },
-    addRecord(studentId, subjectId, date, grade, status) {
-    this.records.push({
-        id: this.currentRecordId++,
-        studentId,
-        subjectId,
-        date,
-        grade: grade !== null ? parseInt(grade) : null,
-        status: status || 'Присутствовал'  // ← если status пустой — ставим "Присутствовал"
-    });
-    this.save();
+    addRecord(studentId, subjectId, date, grades = [], statuses = []) {
+        if (grades.length === 0 && statuses.length === 0) {
+            statuses = ['Присутствовал'];
+        }
+        this.records.push({
+            id: this.currentRecordId++,
+            studentId,
+            subjectId,
+            date,
+            grades,
+            statuses
+        });
+        this.save();
     },
     getGroups() {
         return [...new Set(this.students.map(s => s.group))];
     }
 };
 
-// Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', () => {
     window.appData.load();
 });
