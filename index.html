@@ -13,10 +13,10 @@
     </div>
     
     <div class="buttons-container">
-        <button id="btn-add-student"> Добавить студента</button>
-        <button id="btn-add-subject"> Добавить предмет</button>
-        <button id="btn-add-record"> Добавить запись</button>
-        <button id="btn-show-analytics"> Аналитика и отчеты</button>
+        <button id="btn-add-student">Добавить студента</button>
+        <button id="btn-add-subject">Добавить предмет</button>
+        <button id="btn-add-record">Добавить запись</button>
+        <button id="btn-show-analytics">Аналитика и отчеты</button>
     </div>
     
     <div class="table-container">
@@ -24,11 +24,10 @@
         <table id="dataTable">
             <thead>
                 <tr>
-                    <th>Тип</th>
                     <th>Студент</th>
                     <th>Группа</th>
                     <th>Предмет</th>
-                    <th>Оценка</th>
+                    <th>Оценки</th>
                     <th>Посещаемость</th>
                     <th>Дата</th>
                 </tr>
@@ -99,21 +98,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="gradeValue">Оценка (необязательно):</label>
-                    <input type="number" id="gradeValue" min="1" max="5" placeholder="1–5">
-                    <small>Оставьте пустым, если оценка не ставилась</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="attendanceStatus">Посещаемость (обязательно):</label>
-                    <select id="attendanceStatus" required>
-                        <option value="">— Выберите посещаемость —</option>
-                        <option value="Присутствовал">Присутствовал</option>
-                         <option value="Н">Н — неизвестно</option>
-                         <option value="НО">НО — опоздал</option>
-                         <option value="НБ">НБ — по болезни</option>
-                         <option value="НП">НП — по приказу</option>
-                    </select>
+                    <label for="entryInput">Оценки и посещаемость (через запятую):</label>
+                    <input type="text" id="entryInput" placeholder="2, 5, Н, НО, 4">
+                    <small>Числа 1–5 — оценки, всё остальное — отметки посещаемости (Н, НО, НБ и т.д.)</small>
                 </div>
 
                 <button type="submit">Сохранить запись</button>
@@ -149,7 +136,7 @@
                     <strong>Предметов:</strong> <span id="subjectCount">-</span>
                 </div>
                 <div class="analytics-item">
-                    <strong>Записей:</strong> <span id="totalRecords">-</span>
+                    <strong>Записей (уроков):</strong> <span id="totalRecords">-</span>
                 </div>
                 <div class="analytics-item">
                     <strong>Оценок:</strong> <span id="totalGrades">-</span>
@@ -158,7 +145,6 @@
         </div>
     </div>
 
-    <!-- Подключение JS в порядке зависимостей -->
     <script src="data.js"></script>
     <script src="input-student-subject.js"></script>
     <script src="input-grades.js"></script>
