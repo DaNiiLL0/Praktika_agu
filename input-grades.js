@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const entryInput = (document.getElementById('entryInput').value || '').trim();
 
         if (!studentId || !subjectId) {
-            alert('⚠️ Выберите студента и предмет.');
+            alert('Выберите студента и предмет.');
             return;
         }
 
