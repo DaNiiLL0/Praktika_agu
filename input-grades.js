@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } else {
-            statuses.push('Присутствовал');
+            statuses = [];
         }
 
         data.addRecord(studentId, subjectId, date, grades, statuses);
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const attCell = document.createElement('td');
             if (rec.statuses && rec.statuses.length > 0) {
                 attCell.textContent = rec.statuses.join(', ');
-                const hasPresent = rec.statuses.includes('Присутствовал');
+                const hasPresent = rec.statuses.includes('—');
                 attCell.className = hasPresent ? 'attendance-yes' : 'attendance-no';
             } else {
                 attCell.textContent = '—';
